@@ -88,3 +88,13 @@ ul.js-menu ul {
 ul.js-menu li:hover > ul {
 	visibility: visible;
 }
+
+ul.js-menu.css-anim ul {
+	opacity: 0;
+	transition: all .45s linear;
+}
+
+ul.js-menu.css-anim li:hover > ul {
+	opacity: 1;
+	transition: all .5s linear;
+}

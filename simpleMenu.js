@@ -40,6 +40,10 @@ function SimpleMenu(elementId, options) {
 			}
 			return tree;
 		},
+		fadeMenu: function(e) {
+			var isActive = e.type === 'mouseover';
+			e.currentTarget.classList.toggle('fade-in', isActive);
+		},
 		build: function(data) {
 			wrapper.innerHTML = '<ul class="js-menu">' + 
 				menu.getTree(data) + 
@@ -47,7 +51,14 @@ function SimpleMenu(elementId, options) {
 			
 			// Attach CSS transitions if supported
 			if (wrapper.style.transition !== undefined) {
+				wrapper.querySelector('.js-menu').classList.add('css-anim');
 				
+				var listItems = wrapper.querySelectorAll('li');
+				for (var i = 0; i < listItems.length; i++) {
+					var listItem = listItems[i];
+					listItem.addEventListener('mouseover', menu.fadeMenu);
+					listItem.addEventListener('mouseout', menu.fadeMenu);
+				}
 			}
 		}
 	};
