@@ -2,6 +2,9 @@ function SimpleMenu(elementId, options) {
 	
 	'use strict';
 	
+	if (!elementId)
+		throw 'Error: Missing first parameter elementId!';
+	
 	var exampleData = [
 		{ title: 'Frontpage', href: '#/frontpage' },
 		{ title: 'Photo albums', children: [
@@ -15,6 +18,9 @@ function SimpleMenu(elementId, options) {
 		{ title: 'About', href: '#/about' },
 		{ title: 'Contact', href: '#/contact' }
 	];
+	
+	if (!options)
+		options = {}; 
 	
 	var wrapper;
 	
@@ -75,7 +81,7 @@ function SimpleMenu(elementId, options) {
 					try {
 						menu.build(JSON.parse(this.responseText));
 					} catch(error) {
-						menu.build(exampleData);
+						menu.build(options.data || exampleData);
 						console.log('Error: JSON response could not be parsed! (using example data)');
 					}
 				};
@@ -93,8 +99,8 @@ function SimpleMenu(elementId, options) {
 				throw 'Error fetching json data! ' + err;
 			}
 		} else {
-			menu.build(exampleData);
-			console.info('Error: no jsonUrl in options (using example data!)');
+			menu.build(options.data || exampleData);
+			console.info('Error: no jsonUrl in options! (using example data)');
 		}
 	}());
 	
