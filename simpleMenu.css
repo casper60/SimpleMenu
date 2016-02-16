@@ -1,0 +1,89 @@
+/*
+	Menu theme
+	----------
+*/
+
+ul.js-menu,
+ul.js-menu * {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+ul.js-menu a {
+	color: #333;
+	background: #EEE;
+}
+
+ul.js-menu .menu-indicator {
+	border-left: 4px solid #000;
+	border-top: 4px solid transparent;
+	border-bottom: 4px solid transparent;
+}
+
+
+/*
+	Menu lists
+	----------
+*/
+
+ul.js-menu,
+ul.js-menu ul {
+	position: relative;
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	display: inline-block;
+}
+
+ul.js-menu li:before {
+	content: '';
+	position: absolute;
+	z-index: -1;
+	top: -5px;
+	right: -5px;
+	bottom: -5px;
+	left: -5px;
+	background: transparent;
+}
+
+ul.js-menu li {
+	clear: both;
+	position: relative;
+}
+
+ul.js-menu li a {
+	position: relative;
+	z-index: 1;
+	white-space: nowrap;
+	padding: 4px 12px 4px 6px;
+	display: block;
+	text-decoration: none;
+}
+
+ul.js-menu .menu-indicator {
+	position: absolute;
+	z-index: 2;
+	bottom: 9px;
+	right: 4px;
+	width: 0;
+	height: 0;
+}
+
+/*
+	Menu animation
+	--------------
+*/
+
+ul.js-menu ul {
+	position: absolute;
+	z-index: 1;
+	left: 100%;
+	top: 0;
+	display: block;
+	visibility: hidden;
+}
+
+ul.js-menu li:hover > ul {
+	visibility: visible;
+}
