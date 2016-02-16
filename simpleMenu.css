@@ -3,13 +3,6 @@
 	----------
 */
 
-ul.js-menu,
-ul.js-menu * {
-	-webkit-box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	box-sizing: border-box;
-}
-
 ul.js-menu a {
 	color: #333;
 	background: #EEE;
@@ -26,6 +19,13 @@ ul.js-menu .menu-indicator {
 	Menu lists
 	----------
 */
+
+ul.js-menu,
+ul.js-menu * {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
 
 ul.js-menu,
 ul.js-menu ul {
@@ -49,6 +49,7 @@ ul.js-menu li:before {
 
 ul.js-menu li {
 	clear: both;
+	cursor: pointer;
 	position: relative;
 }
 

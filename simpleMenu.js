@@ -12,7 +12,7 @@ function SimpleMenu(elementId, options) {
 				{ title: 'Winther', href: '#/photos/2001-2014/winther/' }
 			] }
 		] },
-		{ title: 'About', href: '#/about.php' },
+		{ title: 'About', href: '#/about' },
 		{ title: 'Contact', href: '#/contact' }
 	];
 	
@@ -20,8 +20,8 @@ function SimpleMenu(elementId, options) {
 	
 	var menu = {
 		getNode: function(node) {
-			var str = '<li>';
-			str += '<a href="' + (node.href || '#') + '">' + node.title + '</a>';
+			var link = node.href ? ' href="' + node.href + '"' : '',
+				str = '<li><a' + link + '>' + node.title + '</a>';
 			if (node.children)
 				str += '<div class="menu-indicator"></div>';
 			str += node.children ? '<ul>' : '</li>';
@@ -56,13 +56,35 @@ function SimpleMenu(elementId, options) {
 	(function constructor() {
 		wrapper = document.getElementById(elementId);
 		
-		// TODO: support fetching json data from url
-		try {
+		if (options.jsonUrl) {
+			try {
+				var req = new XMLHttpRequest();
+				
+				req.onload = function(ev) {
+					try {
+						menu.build(JSON.parse(this.responseText));
+					} catch(error) {
+						menu.build(exampleData);
+						console.log('Error: JSON response could not be parsed! (using example data)');
+					}
+				};
+				
+				req.onerror = function(err) {
+					throw 'Error: could not get JSON data! ' + err;
+				};
+				
+				req.open('POST', options.jsonUrl, true);
+				req.setRequestHeader('Cache-Control', 'no-cache');
+				req.setRequestHeader('Content-Type', 'application/json');
+				
+				req.send();
+			} catch(err) {
+				throw 'Error fetching json data! ' + err;
+			}
+		} else {
 			menu.build(exampleData);
-		} catch(err) {
-			throw 'Error fetching json data! ' + err;
+			console.info('Error: no jsonUrl in options (using example data!)');
 		}
-		
 	}());
 	
 }
