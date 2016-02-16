@@ -78,11 +78,15 @@ function SimpleMenu(elementId, options) {
 				var req = new XMLHttpRequest();
 				
 				req.onload = function(ev) {
-					try {
-						menu.build(JSON.parse(this.responseText));
-					} catch(error) {
+					if (req.status === 200) {
+						try {
+							menu.build(JSON.parse(this.responseText));
+						} catch(error) {
+							console.log('Error: JSON response could not be parsed! (using example data)');
+						}
+					} else {
 						menu.build(options.data || exampleData);
-						console.log('Error: JSON response could not be parsed! (using example data)');
+						console.log('Error: JSON request did not successfully respond! (using example data)');
 					}
 				};
 				
