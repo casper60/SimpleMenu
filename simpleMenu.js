@@ -1,4 +1,4 @@
-function SimpleMenu(options) {
+function SimpleMenu(elementId, options) {
 	
 	'use strict';
 	
@@ -16,9 +16,52 @@ function SimpleMenu(options) {
 		{ title: 'Contact', href: '#/contact' }
 	];
 	
+	var wrapper;
+	
+	var menu = {
+		getNode: function(node) {
+			var str = '<li>';
+			str += '<a href="' + (node.href || '#') + '">' + node.title + '</a>';
+			if (node.children)
+				str += '<div class="menu-indicator"></div>';
+			str += node.children ? '<ul>' : '</li>';
+			return str;
+		},
+		getTree: function(nodes) {
+			var tree = '';
+			for (var i = 0; i < nodes.length; i++) {
+				var node = nodes[i];
+				tree += menu.getNode(node);
+				
+				// Call this function recursively to render any child nodes
+				if (node.children && node.children.length > 0) {
+					tree += menu.getTree(node.children) + '</ul></li>';
+				}
+			}
+			return tree;
+		},
+		build: function(data) {
+			wrapper.innerHTML = '<ul class="js-menu">' + 
+				menu.getTree(data) + 
+			'</ul>';
+			
+			// Attach CSS transitions if supported
+			if (wrapper.style.transition !== undefined) {
+				
+			}
+		}
+	};
 	
 	
 	(function constructor() {
+		wrapper = document.getElementById(elementId);
+		
+		// TODO: support fetching json data from url
+		try {
+			menu.build(exampleData);
+		} catch(err) {
+			throw 'Error fetching json data! ' + err;
+		}
 		
 	}());
 	
