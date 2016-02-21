@@ -5,7 +5,9 @@
 
 ul.js-menu a {
 	color: #333;
-	background: #EEE;
+	background: rgb(220, 233, 240);
+	border: 1px solid #000;
+	margin-bottom: -1px;
 }
 
 ul.js-menu .menu-indicator {
@@ -14,11 +16,25 @@ ul.js-menu .menu-indicator {
 	border-bottom: 4px solid transparent;
 }
 
+ul.js-menu li.is-selected a {
+	background: rgb(130,182,215);
+}
+
+ul.js-menu li:hover > a {
+	color: #FFF;
+	background: rgb(79, 142, 182);
+}
+
 
 /*
 	Menu lists
 	----------
 */
+
+ul.js-menu {
+	font-size: 13px;
+	font-family: Helvetica, Verdana, Arial, Sans-Serif;
+}
 
 ul.js-menu,
 ul.js-menu * {
@@ -34,6 +50,11 @@ ul.js-menu ul {
 	padding: 0;
 	margin: 0;
 	display: inline-block;
+}
+
+ul.js-menu ul {
+	margin-top: 3px;
+	margin-left: -1px;
 }
 
 ul.js-menu li:before {

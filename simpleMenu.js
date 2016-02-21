@@ -52,7 +52,7 @@ function SimpleMenu(elementId, options) {
 		},
 		build: function(data) {
 			wrapper.innerHTML = '<ul class="js-menu">' + 
-				menu.getTree(data) + 
+				menu.getTree(data, true) + 
 			'</ul>';
 			
 			// Attach CSS transitions if supported
@@ -66,6 +66,10 @@ function SimpleMenu(elementId, options) {
 					listItem.addEventListener('mouseout', menu.fadeMenu);
 				}
 			}
+			
+			// Attach is-selected class
+			var li = wrapper.querySelector('.js-menu').children[0];
+			li.classList.add('is-selected');
 		}
 	};
 	
