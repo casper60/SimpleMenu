@@ -2,6 +2,36 @@
 	
 	'use strict';
 	
+	/*
+	 * 	JS-Menu - Apache License Version 2.0
+	 *  ------------------------------------------------
+	 *  -> by Casper Knudsen <casper@frontender.eu>
+	 *  
+	 * 
+	 * 	Example options:
+	 * 
+	 * 	{
+	 * 	  	data: [
+	 *			{
+	 * 				title: 'Frontpage',
+	 * 				href: '#/frontpage',
+	 * 				classNames: ['is-private']
+	 * 			},
+	 * 			{
+	 * 				title: 'Photo albums',
+	 * 				children: [{
+	 *	 				title: '1950-1990',
+	 *					href: '#/photos/1950-1990/'
+	 * 				}]
+	 *			}
+	 *		],
+	 *		selected: '#/frontpage',
+	 *		selectOnClick: true,
+	 *		animate: true
+	 * 	}
+	 * 
+	*/
+	
 	window.SimpleMenu = function(elementId, options) {
 		if (!elementId || typeof elementId !== 'string')
 			throw 'Error: first parameter should be the element id! <string>';
