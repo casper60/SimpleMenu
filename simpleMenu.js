@@ -8,7 +8,7 @@
 	 *  -> by Casper Knudsen <casper@frontender.eu>
 	 *  
 	 * 
-	 * 	Example options:
+	 * 	Local data example:
 	 * 
 	 * 	{
 	 * 	  	data: [
@@ -19,15 +19,27 @@
 	 * 			},
 	 * 			{
 	 * 				title: 'Photo albums',
-	 * 				children: [{
-	 *	 				title: '1950-1990',
-	 *					href: '#/photos/1950-1990/'
-	 * 				}]
+	 * 				children: [
+	 * 					{
+	 *	 					title: '1950-1990',
+	 *						href: '#/photos/1950-1990/'
+	 * 					}
+	 * 				]
 	 *			}
 	 *		],
 	 *		selected: '#/frontpage',
 	 *		selectOnClick: true,
 	 *		animate: true
+	 * 	}
+	 * 
+	 * 
+	 * 	Remote data example:	
+	 * 
+	 * 	{
+	 * 		jsonUrl: '/api/data.php',
+	 * 		selected: '#/frontpage',
+	 * 		selectOnClick: true,
+	 * 		animated: true
 	 * 	}
 	 * 
 	*/
