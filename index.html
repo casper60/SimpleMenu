@@ -22,8 +22,8 @@
 	<script type="text/javascript" src="simpleMenu.js"></script>
 	<script type="text/javascript">
 		
-		// Example of menu configuration
-		// -----------------------------
+		// Example of menu initialization
+		// ------------------------------
 		
 		var menu = new SimpleMenu('simple-menu-1', {
 			data: [
@@ -39,13 +39,15 @@
 				{ title: 'About', href: '#/about' },
 				{ title: 'Contact', href: '#/contact', classNames: ['is-private'] }
 			],
-			selected: '#/photos/2001-2014/winther/',
+			selected: '#/frontpage',
+			selectOnClick: true,
 			animate: true
 		});
 		
 		
 		// Demonstration of the methods exposed by the menu
 		// ------------------------------------------------
+		// You can use these methods after the menu has been initialized
 		
 		function updateData() {
 			menu.update([

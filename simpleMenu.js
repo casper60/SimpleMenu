@@ -62,11 +62,34 @@
 			build: function() {
 				var html = this.getListItems(options.data || []); 
 				this.elm.innerHTML = '<ul class="js-menu">' + html + '</ul>';
+				
 				if (options.animate === true)
 					this.addAnimation();
+					
+				if (options.selectOnClick)
+					this.setSelectionOnClick();
+			},
+			
+			setSelectionOnClick: function () {
+				var listItems = this.elm.querySelectorAll('li');
+				for (var i = 0; i < listItems.length; i++) {
+					var listItem = listItems[i];
+					
+					// Only attach click event when link has no children
+					if (!listItem.querySelector('ul')) {
+						listItem.querySelector('a').addEventListener('click', function(e) {
+							e.stopImmediatePropagation();
+							options.selected = e.target.getAttribute('href'); 
+							menu.setSelected();
+						});
+					}
+				}
 			},
 			
 			addAnimation: function() {
+				if (this.elm.style.transition === undefined)
+					return;
+					
 				var listItems = this.elm.querySelectorAll('li');
 				
 				function toggleFade(e) {
@@ -76,15 +99,8 @@
 				
 				for (var i = 0; i < listItems.length; i++) {
 					var listItem = listItems[i];
-					
-					if (this.elm.style.transition !== undefined) {
-						listItem.addEventListener('mouseover', toggleFade);
-						listItem.addEventListener('mouseout', toggleFade);
-					}
-					listItem.querySelector('a').addEventListener('click', function(e) {
-						options.selected = e.currentTarget.getAttribute('href');
-						menu.setSelected();
-					});
+					listItem.addEventListener('mouseover', toggleFade);
+					listItem.addEventListener('mouseout', toggleFade);
 				}
 				
 				this.elm.querySelector('.js-menu').classList.add('css-anim');
@@ -118,7 +134,7 @@
 			},
 			
 			mapSelected: function(node) {
-				if (!node.classNames && typeof node.classNames === 'object')
+				if (!node.classNames || typeof node.classNames !== 'object')
 					return node;
 					
 				var index = node.classNames.indexOf('is-selected');
