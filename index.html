@@ -4,16 +4,76 @@
 	<meta charset="utf-8">
 	<title>Js Menu</title>
 	<link type="text/css" rel="stylesheet" href="simpleMenu.css"></script>
+	<style>
+		#simple-menu-1 .is-private a {
+			color: red;
+		}
+	</style>
 </head>
 <body>
 	
 	<div id="simple-menu-1"></div>
 	
+	<button id="updateBtn">Remove private</button>
+	<button id="animBtn">No animation</button>
+	<button id="selectBtn">Select about</button>
+	
 	<script type="text/javascript" src="simpleMenu.js"></script>
 	<script type="text/javascript">
+		
+		// Example of menu configuration
+		// -----------------------------
+		
 		var menu = new SimpleMenu('simple-menu-1', {
-			jsonUrl: 'data.php'
+			data: [
+				{ title: 'Frontpage', href: '#/frontpage' },
+				{ title: 'Photo albums', children: [
+					{ title: '1950-1990', href: '#/photos/1950-1990/' },
+					{ title: '1991-2000', href: '#/photos/1991-2000/' },
+					{ title: '2001-2014', children: [
+						{ title: 'Summer', href: '#/photos/2001-2014/summer/' },
+						{ title: 'Winther', href: '#/photos/2001-2014/winther/' }
+					] }
+				] },
+				{ title: 'About', href: '#/about' },
+				{ title: 'Contact', href: '#/contact', classNames: ['is-private'] }
+			],
+			selected: '#/frontpage',
+			animation: true
 		});
+		
+		
+		// Demonstration of the methods exposed by the menu
+		// ------------------------------------------------
+		
+		function updateData() {
+			menu.update([
+				{ title: 'Frontpage', href: '#/frontpage' },
+				{ title: 'Photo albums', children: [
+					{ title: '1950-1990', href: '#/photos/1950-1990/' },
+					{ title: '1991-2000', href: '#/photos/1991-2000/' },
+					{ title: '2001-2014', children: [
+						{ title: 'Summer', href: '#/photos/2001-2014/summer/' },
+						{ title: 'Winther', href: '#/photos/2001-2014/winther/' }
+					] }
+				] },
+				{ title: 'About', href: '#/about' },
+				{ title: 'Contact', href: '#/contact' }
+			]);
+		}
+		
+		function disableAnimation(hasAnim) {
+			menu.toggleAnimation(false);
+		}
+		
+		function selectAbout() {
+			menu.setSelected('#/about');
+		}
+		
+		document.querySelector('#updateBtn').addEventListener('click', updateData, false);
+		document.querySelector('#animBtn').addEventListener('click', disableAnimation, false);
+		document.querySelector('#selectBtn').addEventListener('click', selectAbout, false);
+		
 	</script>
 	
 </body>

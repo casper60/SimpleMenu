@@ -7,7 +7,7 @@ ul.js-menu a {
 	color: #333;
 	background: rgb(220, 233, 240);
 	border: 1px solid #000;
-	margin-bottom: -1px;
+	font-weight: bold;
 }
 
 ul.js-menu .menu-indicator {
@@ -79,6 +79,7 @@ ul.js-menu li a {
 	z-index: 1;
 	white-space: nowrap;
 	padding: 4px 12px 4px 6px;
+	margin-bottom: -1px;
 	display: block;
 	text-decoration: none;
 }
@@ -112,10 +113,20 @@ ul.js-menu li:hover > ul {
 
 ul.js-menu.css-anim ul {
 	opacity: 0;
+	-webkit-transition: all .45s linear;
+	-moz-transition: all .45s linear;
+	-ms-transition: all .45s linear;
+	-o-transition: all .45s linear;
+	-khtml-transition: all .45s linear;
 	transition: all .45s linear;
 }
 
 ul.js-menu.css-anim li:hover > ul {
 	opacity: 1;
+	-webkit-transition: all .5s linear;
+	-moz-transition: all .5s linear;
+	-ms-transition: all .5s linear;
+	-o-transition: all .5s linear;
+	-khtml-transition: all .5s linear;
 	transition: all .5s linear;
 }
