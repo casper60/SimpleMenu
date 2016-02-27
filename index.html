@@ -22,9 +22,7 @@
 	<script type="text/javascript" src="simpleMenu.js"></script>
 	<script type="text/javascript">
 		
-		// Example of menu initialization
-		// ------------------------------
-		
+		// Initialize menu
 		var menu = new SimpleMenu('simple-menu-1', {
 			data: [
 				{ title: 'Frontpage', href: '#/frontpage' },
@@ -50,29 +48,25 @@
 		// You can use these methods after the menu has been initialized
 		
 		function updateData() {
+			// Update the data with something new
 			menu.update([
 				{ title: 'Frontpage', href: '#/frontpage' },
-				{ title: 'Photo albums', children: [
-					{ title: '1950-1990', href: '#/photos/1950-1990/' },
-					{ title: '1991-2000', href: '#/photos/1991-2000/' },
-					{ title: '2001-2014', children: [
-						{ title: 'Summer', href: '#/photos/2001-2014/summer/' },
-						{ title: 'Winther', href: '#/photos/2001-2014/winther/' }
-					] }
-				] },
 				{ title: 'About', href: '#/about' },
 				{ title: 'Contact', href: '#/contact' }
 			]);
 		}
 		
 		function disableAnimation(hasAnim) {
+			// Toggle animation on/off
 			menu.animate(false);
 		}
 		
 		function selectAbout() {
+			// Set selected menu item by specifying active href
 			menu.select('#/about');
 		}
 		
+		// Attach click events for demo buttons
 		document.querySelector('#updateBtn').addEventListener('click', updateData, false);
 		document.querySelector('#animBtn').addEventListener('click', disableAnimation, false);
 		document.querySelector('#selectBtn').addEventListener('click', selectAbout, false);
