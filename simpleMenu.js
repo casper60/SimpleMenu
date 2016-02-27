@@ -9,6 +9,9 @@
 		if (!options || typeof options !== 'object')
 			throw 'Error: Second parameter should be your options! <object>';
 		
+		// TODO: support setting selections down the tree
+		// We should select any parent that has a selected child
+		
 		var menu = {
 			elm: document.getElementById(elementId),
 			
@@ -22,37 +25,33 @@
 				return node;
 			},
 			
-			getNode: function(node) {
+			getListItem: function(node) {
 				var link = node.href ? ' href="' + node.href + '"' : '',
 					classNames = node.classNames ? ' class="' + node.classNames.join(' ') + '"' : '',
-					str = '<li' + classNames + '><a' + link + '>' + node.title + '</a>';
+					html = '<li' + classNames + '><a' + link + '>' + node.title + '</a>';
 				if (node.children) {
-					str += '<div class="menu-indicator"></div>';
+					html += '<div class="menu-indicator"></div>';
 				}
-				str += node.children ? '<ul>' : '</li>';
-				return str;
+				html += node.children ? '<ul>' : '</li>';
+				return html;
 			},
 			
-			getTree: function(nodes) {
-				var tree = '';
+			getListItems: function(nodes) {
+				var html = '';
 				for (var i = 0; i < nodes.length; i++) {
 					var node = this.addClassNames(nodes[i]);
-					tree += this.getNode(node);
+					html += this.getListItem(node);
 					
 					// Call this function recursively to render any child nodes
 					if (node.children && node.children.length > 0) {
-						tree += this.getTree(node.children) + '</ul></li>';
+						html += this.getListItems(node.children) + '</ul></li>';
 					}
 				}
-				return tree;
+				return '<ul class="js-menu">' + html + '</ul>';
 			},
 			
 			build: function() {
-				this.elm.innerHTML = '<ul class="js-menu">' + 
-					this.getTree(options.data || []) + 
-				'</ul>';
-				
-				// Add animation when enabled
+				this.elm.innerHTML = this.getListItems(options.data || []);
 				if (options.animation === true)
 					this.addAnimation();
 			},
@@ -78,7 +77,7 @@
 				this.elm.querySelector('.js-menu').classList.add('css-anim');
 			},
 			
-			fetchJsonData: function() {
+			getJson: function() {
 				try {
 					var req = new XMLHttpRequest();
 					req.onload = function(ev) {
@@ -90,11 +89,11 @@
 								throw 'Error: JSON response could not be parsed!';
 							}
 						} else {
-							throw 'Error: JSON request did not respond successfully!';
+							throw 'Error: JSON request responded with status code: ' + req.status;
 						}
 					};
 					req.onerror = function(err) {
-						throw 'Error: could not get JSON data! ' + err;
+						throw 'Error: JSON request failed! ' + err;
 					};
 					req.open('POST', options.jsonUrl, true);
 					req.setRequestHeader('Cache-Control', 'no-cache');
@@ -105,7 +104,7 @@
 				}
 			},
 			
-			cleanSelection: function() {
+			setSelected: function() {
 				options.data = options.data.map(function(node) {
 					if (node.classNames && typeof node.classNames === 'object') {
 						var index = node.classNames.indexOf('is-selected');
@@ -119,7 +118,7 @@
 		
 		(function constructor() {
 			if (options.jsonUrl) {
-				menu.fetchJsonData();
+				menu.getJson();
 			} else {
 				menu.build();
 			}
@@ -136,16 +135,15 @@
 			updateJson: function(urlStr) {
 				if (!options.jsonUrl && !urlStr)
 					throw 'Error: you are missing a url to the json data! <string>';
-				if (urlStr)
-					options.jsonUrl = urlStr;
-				menu.fetchJsonData();
+				options.jsonUrl = urlStr ? urlStr : options.jsonUrl;	
+				menu.getJson();
 			},
 			
 			setSelected: function(selectedStr) {
 				if (!selectedStr || typeof selectedStr !== 'string')
 					throw 'Error: you are missing the selection! <string>';
 				options.selected = selectedStr;
-				menu.cleanSelection();
+				menu.setSelected();
 			},
 			
 			toggleAnimation: function(enableBool) {
