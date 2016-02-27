@@ -16,7 +16,7 @@ ul.js-menu .menu-indicator {
 	border-bottom: 4px solid transparent;
 }
 
-ul.js-menu li.is-selected a {
+ul.js-menu li.is-selected > a {
 	background: rgb(130,182,215);
 }
 

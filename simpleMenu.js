@@ -9,14 +9,23 @@
 		if (!options || typeof options !== 'object')
 			throw 'Error: Second parameter should be your options! <object>';
 		
-		// TODO: support setting selections down the tree
-		// We should select any parent that has a selected child
-		
 		var menu = {
 			elm: document.getElementById(elementId),
 			
-			addClassNames: function(node) {
-				if (node.href === options.selected) {
+			hasSelection: function(children) {
+				var hasSelection = false;
+				for (var i = 0; i < children.length; i++) {
+					var child = children[i],
+						childHasSelection = child.children && this.hasSelection(child.children); 
+					if (child.href === options.selected || childHasSelection)
+						hasSelection = true;
+				}
+				return hasSelection;
+			},
+			
+			addSelectedCss: function(node) {
+				var hasSelection = node.children && this.hasSelection(node.children);
+				if (node.href === options.selected || hasSelection) {
 					if (!node.classNames)
 						node.classNames = [];	
 					if (node.classNames.indexOf('is-selected') === -1)					
@@ -39,7 +48,7 @@
 			getListItems: function(nodes) {
 				var html = '';
 				for (var i = 0; i < nodes.length; i++) {
-					var node = this.addClassNames(nodes[i]);
+					var node = this.addSelectedCss(nodes[i]);
 					html += this.getListItem(node);
 					
 					// Call this function recursively to render any child nodes
@@ -47,20 +56,17 @@
 						html += this.getListItems(node.children) + '</ul></li>';
 					}
 				}
-				return '<ul class="js-menu">' + html + '</ul>';
+				return html;
 			},
 			
 			build: function() {
-				this.elm.innerHTML = this.getListItems(options.data || []);
-				if (options.animation === true)
+				var html = this.getListItems(options.data || []); 
+				this.elm.innerHTML = '<ul class="js-menu">' + html + '</ul>';
+				if (options.animate === true)
 					this.addAnimation();
 			},
 			
 			addAnimation: function() {
-				// Add CSS transitions when supported
-				if (this.elm.style.transition === undefined)
-					return;
-					
 				var listItems = this.elm.querySelectorAll('li');
 				
 				function toggleFade(e) {
@@ -70,8 +76,15 @@
 				
 				for (var i = 0; i < listItems.length; i++) {
 					var listItem = listItems[i];
-					listItem.addEventListener('mouseover', toggleFade);
-					listItem.addEventListener('mouseout', toggleFade);
+					
+					if (this.elm.style.transition !== undefined) {
+						listItem.addEventListener('mouseover', toggleFade);
+						listItem.addEventListener('mouseout', toggleFade);
+					}
+					listItem.querySelector('a').addEventListener('click', function(e) {
+						options.selected = e.currentTarget.getAttribute('href');
+						menu.setSelected();
+					});
 				}
 				
 				this.elm.querySelector('.js-menu').classList.add('css-anim');
@@ -104,14 +117,20 @@
 				}
 			},
 			
-			setSelected: function() {
-				options.data = options.data.map(function(node) {
-					if (node.classNames && typeof node.classNames === 'object') {
-						var index = node.classNames.indexOf('is-selected');
-						if (index !== -1) node.classNames.splice(index, 1);
-					}
+			mapSelected: function(node) {
+				if (!node.classNames && typeof node.classNames === 'object')
 					return node;
-				});
+					
+				var index = node.classNames.indexOf('is-selected');
+				if (index !== -1)
+					node.classNames.splice(index, 1);
+				if (node.children)
+					node.children = node.children.map(menu.mapSelected);
+				return node;
+			},
+			
+			setSelected: function() {
+				options.data = options.data.map(this.mapSelected);
 				this.build();
 			}
 		};
@@ -139,17 +158,17 @@
 				menu.getJson();
 			},
 			
-			setSelected: function(selectedStr) {
+			select: function(selectedStr) {
 				if (!selectedStr || typeof selectedStr !== 'string')
 					throw 'Error: you are missing the selection! <string>';
 				options.selected = selectedStr;
 				menu.setSelected();
 			},
 			
-			toggleAnimation: function(enableBool) {
-				if (typeof enableBool !== 'boolean')
+			animate: function(animateBool) {
+				if (typeof animateBool !== 'boolean')
 					throw 'Error: you are missing the enable animation state! <boolean>';
-				options.animation = enableBool;
+				options.animate = animateBool;
 				menu.build();
 			}
 		};
