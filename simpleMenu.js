@@ -22,7 +22,9 @@
 	 * 				children: [
 	 * 					{
 	 *	 					title: '1950-1990',
-	 *						href: '#/photos/1950-1990/'
+	 *						href: '#/photos/1950-1990/',
+	 *						target: '_blank',
+	 *						hoverText: 'Opens in a new page...'
 	 * 					}
 	 * 				]
 	 *			}
@@ -65,7 +67,7 @@
 				return hasSelection;
 			},
 			
-			addSelectedCss: function(node) {
+			setSelectedClass: function(node) {
 				var hasSelection = node.children && this.hasSelection(node.children);
 				if (node.href === options.selected || hasSelection) {
 					if (!node.classNames)
@@ -76,35 +78,67 @@
 				return node;
 			},
 			
-			getListItem: function(node) {
-				var link = node.href ? ' href="' + node.href + '"' : '',
-					target = node.target ? ' target="' + node.target + '"' : '',
-					classNames = node.classNames ? ' class="' + node.classNames.join(' ') + '"' : '',
-					html = '<li' + classNames + '><a' + link + target + '>' + node.title + '</a>';
-				if (node.children) {
-					html += '<div class="menu-indicator"></div>';
-				}
-				html += node.children ? '<ul>' : '</li>';
-				return html;
+			getChildren: function(li, item) {
+				var children = this.getListItems(item.children),
+					ul = document.createElement('ul');
+				
+				// Add list to menu item with child nodes	
+				for (var i = 0; i < children.length; i++)
+					ul.appendChild(children[i]);
+				li.appendChild(ul);
+				
+				// Add a sub-menu indicator arrow
+				var div = document.createElement('div');
+				div.classList.add('menu-indicator');
+				li.appendChild(div);
+				
+				return li;
 			},
 			
-			getListItems: function(nodes) {
-				var html = '';
-				for (var i = 0; i < nodes.length; i++) {
-					var node = this.addSelectedCss(nodes[i]);
-					html += this.getListItem(node);
-					
-					// Call this function recursively to render any child nodes
-					if (node.children && node.children.length > 0) {
-						html += this.getListItems(node.children) + '</ul></li>';
-					}
+			getItem: function(item) {
+				var li = document.createElement('li'),
+					a = document.createElement('a');
+				
+				// Add class names to listitem
+				if (item.classNames) {
+					for (var i = 0; i < item.classNames.length; i++)
+						li.classList.add(item.classNames[i]);
 				}
-				return html;
+				
+				// Configure link
+				if (item.title) a.innerHTML = item.title;
+				if (item.href) a.setAttribute('href', item.href);
+				if (item.target) a.setAttribute('target', item.target);
+				if (item.hoverText) a.setAttribute('title', item.hoverText);
+				li.appendChild(a);
+				
+				// Add child nodes recursively
+				if (item.children)
+					li = this.getChildren(li, item);
+				return li;
+			},
+			
+			getListItems: function(items) {
+				var listItems = [];
+				for (var i = 0; i < items.length; i++) {
+					var item = this.setSelectedClass(items[i]);
+					var li = this.getItem(item);
+					listItems.push(li);
+				}
+				return listItems;
 			},
 			
 			build: function() {
-				var html = this.getListItems(options.data || []); 
-				this.elm.innerHTML = '<ul class="js-menu">' + html + '</ul>';
+				// Build menu tree
+				var listItems = this.getListItems(options.data || []);
+				var ul = document.createElement('ul');
+				for (var i = 0; i < listItems.length; i++)
+					ul.appendChild(listItems[i]);
+				ul.classList.add('js-menu'); 
+				
+				// Clear element and append list
+				this.elm.innerHTML = '';
+				this.elm.appendChild(ul);
 				
 				if (options.animate === true)
 					this.addAnimation();
