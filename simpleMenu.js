@@ -78,8 +78,9 @@
 			
 			getListItem: function(node) {
 				var link = node.href ? ' href="' + node.href + '"' : '',
+					target = node.target ? ' target="' + node.target + '"' : '',
 					classNames = node.classNames ? ' class="' + node.classNames.join(' ') + '"' : '',
-					html = '<li' + classNames + '><a' + link + '>' + node.title + '</a>';
+					html = '<li' + classNames + '><a' + link + target + '>' + node.title + '</a>';
 				if (node.children) {
 					html += '<div class="menu-indicator"></div>';
 				}
